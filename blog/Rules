@@ -1,16 +1,27 @@
 #!/usr/bin/env ruby
 
-compile '/**/*.html' do
-  layout '/default.*'
-end
+#compile '/**/*.html' do
+# layout '/default.*'
+#end
 
 # This is an example rule that matches Markdown (.md) files, and filters them
 # using the :kramdown filter. It is commented out by default, because kramdown
 # is not bundled with Nanoc or Ruby.
 #
-#compile '/**/*.md' do
-#  filter :kramdown
-#  layout '/default.*'
+compile '/posts/*' do
+  filter :kramdown
+  layout '/post.html'
+end
+
+compile '/**/index.{html,md}' do
+  filter :erb
+  filter :kramdown
+  layout '/default.html'
+end
+
+#compile '/' do
+#  filter :erb
+#  layout 'default'
 #end
 
 route '/**/*.{html,md}' do

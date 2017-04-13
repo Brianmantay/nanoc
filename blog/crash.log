@@ -1,0 +1,124 @@
+Crashlog created at 2017-04-13 12:19:33 +0000
+
+===== MESSAGE:
+
+Nanoc::Int::Errors::UnknownLayout: The site does not have a layout with identifier “post.html”.
+
+===== ITEM BEING COMPILED:
+
+Item identifier: /posts/2012-02-10-my-first-post.md
+Item rep name:   :default
+
+===== STACK TRACE:
+
+  0. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/executor.rb:108:in `find_layout'
+  1. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/executor.rb:47:in `layout'
+  2. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/recalculate.rb:30:in `block in run'
+  3. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/entities/rule_memory.rb:62:in `block in each'
+  4. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/entities/rule_memory.rb:62:in `each'
+  5. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/entities/rule_memory.rb:62:in `each'
+  6. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/recalculate.rb:25:in `run'
+  7. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/abstract.rb:11:in `call'
+  8. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/abstract.rb:13:in `block in call'
+  9. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/cache.rb:21:in `run'
+  10. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/abstract.rb:11:in `call'
+  11. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/abstract.rb:13:in `block in call'
+  12. /usr/local/bundle/gems/nanoc-4.7.1/lib/nanoc/base/services/compiler/phases/resume.rb:12:in `block in run'
+
+===== VERSION INFORMATION:
+
+Nanoc 4.7.1 © 2007-2017 Denis Defreyne.
+Running ruby 2.3.3 (2016-11-21) on x86_64-linux with RubyGems 2.6.11.
+
+===== SYSTEM INFORMATION:
+
+Linux 95b01d40bd5b 4.8.0-41-generic #44-Ubuntu SMP Fri Mar 3 15:27:17 UTC 2017 x86_64 GNU/Linux
+
+===== INSTALLED GEMS:
+
+  adsf 1.2.1
+  bundler 1.14.6
+  chunky_png 1.3.8
+  coderay 1.1.1
+  colored 1.2
+  compass 1.0.3
+  compass-core 1.0.3
+  compass-h5bp 1.0.0
+  compass-import-once 1.0.5
+  concurrent-ruby 1.0.5
+  cri 2.7.1
+  ddplugin 1.0.1
+  ffi 1.9.18
+  formatador 0.2.5
+  guard 2.14.1
+  guard-compat 1.2.1
+  guard-nanoc 2.1.2
+  hamster 3.0.0
+  kramdown 1.13.2
+  listen 3.1.5
+  lumberjack 1.0.11
+  method_source 0.8.2
+  multi_json 1.12.1
+  nanoc 4.7.1
+  nenv 0.3.0
+  notiffany 0.1.1
+  pry 0.10.4
+  rack 2.0.1
+  rb-fsevent 0.9.8
+  rb-inotify 0.9.8
+  ref 2.0.0
+  ruby_dep 1.5.0
+  sass 3.4.23
+  shellany 0.0.1
+  slop 3.6.0
+  thor 0.19.4
+
+===== LOAD PATHS:
+
+  0. /usr/local/bundle/gems/ref-2.0.0/lib
+  1. /usr/local/lib/ruby/gems/2.3.0/gems/bundler-1.14.6/lib
+  2. /usr/local/bundle/gems/kramdown-1.13.2/lib
+  3. /usr/local/bundle/gems/guard-nanoc-2.1.2/lib
+  4. /usr/local/bundle/gems/nanoc-4.7.1/lib
+  5. /usr/local/bundle/gems/ref-2.0.0/lib
+  6. /usr/local/bundle/gems/hamster-3.0.0/lib
+  7. /usr/local/bundle/gems/guard-compat-1.2.1/lib
+  8. /usr/local/bundle/gems/guard-2.14.1/lib
+  9. /usr/local/bundle/gems/thor-0.19.4/lib
+  10. /usr/local/bundle/gems/pry-0.10.4/lib
+  11. /usr/local/bundle/gems/slop-3.6.0/lib
+  12. /usr/local/bundle/gems/method_source-0.8.2/lib
+  13. /usr/local/bundle/gems/notiffany-0.1.1/lib
+  14. /usr/local/bundle/gems/shellany-0.0.1/lib
+  15. /usr/local/bundle/gems/nenv-0.3.0/lib
+  16. /usr/local/bundle/gems/lumberjack-1.0.11/lib
+  17. /usr/local/bundle/gems/listen-3.1.5/lib
+  18. /usr/local/bundle/gems/ruby_dep-1.5.0/lib
+  19. /usr/local/bundle/gems/formatador-0.2.5/lib
+  20. /usr/local/bundle/gems/ddplugin-1.0.1/lib
+  21. /usr/local/bundle/gems/cri-2.7.1/lib
+  22. /usr/local/bundle/gems/concurrent-ruby-1.0.5/lib
+  23. /usr/local/bundle/gems/compass-h5bp-1.0.0/lib
+  24. /usr/local/bundle/gems/compass-1.0.3/lib
+  25. /usr/local/bundle/gems/rb-inotify-0.9.8/lib
+  26. /usr/local/bundle/gems/ffi-1.9.18/lib
+  27. /usr/local/bundle/extensions/x86_64-linux/2.3.0/ffi-1.9.18
+  28. /usr/local/bundle/gems/rb-fsevent-0.9.8/lib
+  29. /usr/local/bundle/gems/compass-import-once-1.0.5/lib
+  30. /usr/local/bundle/gems/compass-core-1.0.3/lib
+  31. /usr/local/bundle/gems/sass-3.4.23/lib
+  32. /usr/local/bundle/gems/multi_json-1.12.1/lib
+  33. /usr/local/bundle/gems/colored-1.2/lib
+  34. /usr/local/bundle/gems/coderay-1.1.1/lib
+  35. /usr/local/bundle/gems/chunky_png-1.3.8/lib
+  36. /usr/local/lib/ruby/gems/2.3.0/gems/bundler-1.14.6/lib/gems/bundler-1.14.6/lib
+  37. /usr/local/bundle/gems/adsf-1.2.1/lib
+  38. /usr/local/bundle/gems/rack-2.0.1/lib
+  39. /usr/local/lib/ruby/site_ruby/2.3.0
+  40. /usr/local/lib/ruby/site_ruby/2.3.0/x86_64-linux
+  41. /usr/local/lib/ruby/site_ruby
+  42. /usr/local/lib/ruby/vendor_ruby/2.3.0
+  43. /usr/local/lib/ruby/vendor_ruby/2.3.0/x86_64-linux
+  44. /usr/local/lib/ruby/vendor_ruby
+  45. /usr/local/lib/ruby/2.3.0
+  46. /usr/local/lib/ruby/2.3.0/x86_64-linux
