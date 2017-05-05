@@ -2,9 +2,11 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>My blog - My first post</title>
+		<title>My blog - Containerized nanoc</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"> 
 		<link href='//netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet'/>
 		<link rel="stylesheet" type="text/css" href="/stylesheet.css">
 	</head>
@@ -12,16 +14,16 @@
 
 		<nav class="navbar navbar-default fixed-top">
 			<div class="container">
-				<ul class='nav'>
+				<!--<ul class='nav'>
 					<li class='active'><a href='/'>Home</a></li>
 					<li><a href='/about'>About</a></li>
-				</ul>
+				</ul> -->
 			</div>
 		</nav>
 		<div class='header'>
 			<div class="container">
 				<div class="title">
-					<h1 class="text-center">Brian Mantay</h1>
+					<!--<h1 class="text-center">Brian Mantay</h1>
 					<div class="container social-links">
 						<button class="btn btn-linkedin">
 							<i class="fa fa-linkedin"></i>
@@ -32,7 +34,7 @@
 						<button class="btn btn-github">
 						 	<i class="fa fa-github"></i>
 						</button>
-					</div>
+					</div>-->
 				</div>
 			</div>
 		</div>
@@ -40,11 +42,109 @@
 			<section class='content'>
 				
   <div class='post'>
-    <h1>My first post</h1>
+    <h1>Containerized nanoc</h1>
     <aside>Posted at: 2017-04-14 09:00:00 +0000</aside>
     <article>
       
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+<p>Probably like many of my kind I’ve thought having a blog would be nice but have never bothered. I’m not really one for self promotion in that sense, but I’m feeling inspired…</p>
+
+<p>I wanted to tinker with Docker to containerize a Nanoc blog. More just to step through some basic Docker stuff and follow through with a basic CI/CD pipline, simply for the sake of it.</p>
+
+<p><strong>Goals:</strong></p>
+
+<ol>
+  <li>
+    <p>Create a blog in a container as an excuse to use Docker</p>
+  </li>
+  <li>
+    <p>Develop inside my container</p>
+  </li>
+  <li>
+    <p>When I commit changes my container will be deployed</p>
+  </li>
+</ol>
+
+<h2 id="set-up-nanoc">Set up nanoc</h2>
+
+<p>For this I fired up an Ubuntu VM and installed Docker as per the <a href="https://docs.docker.com/engine/installation/linux/ubuntu/">Docker site instructions</a>. I then set about <a href="https://nanoc.ws/doc/tutorial/">getting nanoc installed</a></p>
+
+<p>In my case I generated a new site and created the following Gemfile</p>
+
+<pre><code>source 'https://rubygems.org'
+gem 'nanoc'
+gem 'kramdown'
+gem 'adsf'
+gem 'compass'
+gem 'compass-h5bp'
+</code></pre>
+
+<p>After a trusty</p>
+
+<pre><code>$ bundle install
+</code></pre>
+
+<p>and a</p>
+
+<pre><code>$ nanoc view
+</code></pre>
+
+<p>I had things running with the default site on localhost:3000</p>
+
+<h2 id="ramming-it-inside-docker">Ramming it inside Docker</h2>
+
+<p>There are easier ways to host nanoc sites… but I wanted to containerize. I created my Dockerfile, and after a bit of trial and error I settled for</p>
+
+<pre><code>FROM ruby:2.3				// gives me a base ruby image to work from (cheers) 
+RUN mkdir -p /user/src/app		// creates my target code directory inside the container
+COPY . /usr/src/app			// takes my source and puts it there
+WORKDIR /usr/src/app/blog		// sets the context for which commands will be run inside the container
+EXPOSE 3000				// exposeds a container port to the host
+RUN bundle install			// will occur when the container is created, so my Gemfile dependencies are installed in the container
+CMD bundle exec nanoc -v &amp;&amp; bundle exec nanoc view	// the starts the nanoc site when the container starts
+</code></pre>
+
+<p>After a trusty</p>
+
+<pre><code>$ docker build -t bmantay/nanoc .
+</code></pre>
+
+<p>I had a built image from which my container instances can be created. Whatsmore:</p>
+
+<pre><code>$ docker run -d -p 3000:3000 bmantay/nanoc
+</code></pre>
+
+<p>I had my nanoc site running inside my Docker container exposed on http://localhost:3000</p>
+
+<p>Withstanding any meanful content… that’s pretty much my blog in a container ready for deployment.</p>
+
+<p>I have of course been committing this <a href="https://github.com/Brianmantay/nanoc">my Git repo</a></p>
+
+<h2 id="my-dev-environment">My dev environment</h2>
+
+<p>I’m curious about the jouney of a container from dev to prod. So I felt I wanted to ensure I’m developing the blog and its content inside the container. So for development I want 1) changes made on my local machine to be reflected inside the container… 2) nanoc to recompile when I make changes so I dont have to run ‘nanoc view’ inside the container evey change I make.</p>
+
+<p>For the recompile on changes a common solution is to install the Guard gem. I added this to my Gemfile and created the following Guard file… it basically watches for changes on the file system and triggers a nanoc compilation:</p>
+
+<pre><code>guard 'nanoc' do
+  watch('nanoc.yaml')
+  watch('Rules')
+  watch(%r{^(content|layouts|lib)/.*$})
+end
+</code></pre>
+
+<p>With this you can now kick the site off with the ‘nanoc live’ instead of ‘nanoc view’</p>
+
+<p>To allow my changes to be reflected in the container however, I need to map a volume from my local dev to the container. This is achieved using the -v option. So I mapped my local directory home/osboxes/code/nanoc to the container /usr/src/app (specified in thte Dockerfile earlier)</p>
+
+<p>I also learned you can overwrite the CMD in the Dockerfile at runtime. This allowed me to fire up Guard so my changes in the volume trigger a recompile. So, when I’m developing I can start my container like this:</p>
+
+<pre><code>$ docker run -d -p 3000:3000 -v /home/osboxes/code/nanoc:/usr/src/app bmantay/nanoc bundle exec nanoc live
+</code></pre>
+
+<p>Took a bit a fiddling around but I was pleased :)</p>
+
+<h2 id="sum-up">Sum up</h2>
+<p>I’ve achieved 2 of my 3 goals so far. Number 3 (the container deployment) will have to wait for part 2.</p>
 
 
     </article>

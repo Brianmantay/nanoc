@@ -3,14 +3,15 @@ html, body {
   height: 100%;
 }
 .header {
-  height:250px;
+  height:150px;
   color:#fff;
-  margin-top:80px;
+  margin-top:30px;
   background-image:url("images/mild.jpg");
   padding-top:80px;
 }
 .title{
   margin:auto 0px;
+  font-family: 'Josefin Sans', sans-serif;
 }
 .navbar{
   background-color:#fff;
@@ -43,5 +44,16 @@ html, body {
 .post a {
   color:#4CA2CC;
   font-size:2rem;
+}
+.post article a{
+  font-size: 1rem
+}
+pre {
+  font-family: 'Source Code Pro', monospace;
+  color: #292b2c;
+  background: #fefefe;
+  padding: 5px;
+  border: 1px solid #eee;
+  font-size: 12px;
 }
 
