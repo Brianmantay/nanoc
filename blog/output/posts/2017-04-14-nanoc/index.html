@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>My blog - Containerized nanoc</title>
+		<title>My blog - Containerized nanoc with VSTS CD to Azure</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet"> 
@@ -42,7 +42,7 @@
 			<section class='content'>
 				
   <div class='post'>
-    <h1>Containerized nanoc</h1>
+    <h1>Containerized nanoc with VSTS CD to Azure</h1>
     <aside>Posted at: 2017-04-14 09:00:00 +0000</aside>
     <article>
       
@@ -143,8 +143,69 @@ end
 
 <p>Took a bit a fiddling around but I was pleased :)</p>
 
+<h2 id="to-production">To production…</h2>
+
+<p>For the CD pipe my tools of choice are VSTS for build and deployment and Azure for my Docker host… mainly because I have access to these tool for free from work ;)</p>
+
+<p>There were a number of things to put in place. I’ll be brief.</p>
+
+<h3 id="azure-docker-host-setup">Azure docker host setup</h3>
+
+<ol>
+  <li>
+    <p>This is great as there is a Azure template for Docker. Fire up the Azure portal and create an Ubuntu VM with Docker.</p>
+  </li>
+  <li>
+    <p>This VM was going to be my docker host where my container is deployed to. But I also need a VSTS build agent running to build and push my container so for simplicty I’m using this same VM to run the build agent. To get this running I used <a href="Deploy an agent on Linux">the Deploy an agent on Linux post</a> which also shows how to setup the personal access token (PAT) and run the agent as a systemd service.</p>
+  </li>
+  <li>
+    <p>This next bit was less fun. In order for VSTS to deploy to my Docker host from VSTS I had to setup some certificates. This was done as per <a href="https://docs.docker.com/engine/security/https/">this Docker documentation</a>. Admittedly there was a fair bit of fiddling to get this to work for me. I was able to test this calling via curl as described in the post to ensure I was on the right track.</p>
+  </li>
+</ol>
+
+<h3 id="vsts-setup">VSTS setup</h3>
+
+<ol>
+  <li>
+    <p>So here I created a new project and hooked up my Git repo containing this nanoc blog.</p>
+  </li>
+  <li>
+    <p>Installed the Docker VSTS extension that contains the steps to help me get this guy deployed. I found <a href="https://pleasereleaseme.net/continuous-delivery-with-containers-use-visual-studio-team-services-and-docker-to-build-and-deploy-asp-net-core-to-linux/">this post</a> really helpful. It also show how to add in the keys generated in the previous section.</p>
+  </li>
+</ol>
+
+<p>I also had to register an account with Docker Hub because my container would be published there during the deployment process before it was pushed to the Docker host in Azure.</p>
+
+<ol>
+  <li>The build / deploy step were setup as follows.</li>
+</ol>
+
+<div class="post-image"><img src="/images/vstsbuild.png" alt="VSTS build steps" /></div>
+
+<ol>
+  <li>
+    <p><strong>Get sources:</strong> Pulls my changes from Git</p>
+  </li>
+  <li>
+    <p><strong>Stop container:</strong> Runs a Docker command to stop my container from any previous deploys</p>
+  </li>
+  <li>
+    <p><strong>Remove container:</strong> Runs a Docker command to ensure the old container is deleted</p>
+  </li>
+  <li>
+    <p><strong>Build an image:</strong> Runs docker build on my Dockerfile</p>
+  </li>
+  <li>
+    <p><strong>Push an image:</strong> Publishes my image to Dockerhub</p>
+  </li>
+  <li>
+    <p><strong>Run an image:</strong> Talks to my Docker host in Azure and by calling docker run pulls my image from Dockerhub and away it goes</p>
+  </li>
+</ol>
+
 <h2 id="sum-up">Sum up</h2>
-<p>I’ve achieved 2 of my 3 goals so far. Number 3 (the container deployment) will have to wait for part 2.</p>
+
+<p>There we have it. A simple git push… and as long as I remeber to keep my Docker host running in Azure then my blog is automatically built and deployed. This is all obviously quite simplistic and for a real application you’d want to introduce additional stages and environments during the path to production. Which is something I’ll take a look at shortly.</p>
 
 
     </article>
